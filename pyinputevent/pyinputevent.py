@@ -118,7 +118,7 @@ class SimpleDevice(object):
         `receive` is called with an event as each new InputEvent
         is read.
         """
-        print self.name, event
+        print(self.name, event)
         sys.stdout.flush()
     def fileno(self):
         return self._fileno
@@ -162,14 +162,14 @@ class Controller(object):
     def format_event(self, event):
         return "%s %s" % (self.format_timestamp(event.timestamp), event)
     def handle_keyup(self, keyevent):
-        print self.format_event(keyevent)
+        print(self.format_event(keyevent))
     def handle_keydown(self, keyevent):
-        print self.format_event(keyevent)
+        print(self.format_event(keyevent))
     def handle_move(self, moveevent):
-        print self.format_event(moveevent)
+        print(self.format_event(moveevent))
     def handle_events(self, events):
         for event in events:
-            print self.format_event(event)
+            print(self.format_event(event))
 
 class HIDevice(SimpleDevice):
     """

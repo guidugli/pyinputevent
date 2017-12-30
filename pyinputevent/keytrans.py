@@ -7,8 +7,8 @@ __all__ = (
     'revmap', 'KeyEvent', 'KeymapParser',
 )
 
-from pyinputevent import InputEvent
-import scancodes
+from .pyinputevent import InputEvent
+from . import scancodes
 import logging
 import time
 import compiler
@@ -21,7 +21,7 @@ MOD_ALT = 4
 #
 
 revmap = {}
-for k,v in scancodes.__dict__.items():
+for k,v in list(scancodes.__dict__.items()):
     if k.startswith("KEY_") or k.startswith("BTN_"):
         revmap[v] = k
 
@@ -118,7 +118,7 @@ def make_keyevents(keystring):
 
 class KeymapParser(object):
     def __init__(self, configfd):
-        if isinstance(configfd, basestring):
+        if isinstance(configfd, str):
             configfd = file(configfd, "r")
         self.map = {}
         self.queue = []
@@ -129,7 +129,7 @@ class KeymapParser(object):
                 continue
             left, right = line.split("=", 1)
             left = left.strip()
-            right = map(str.strip, right.split(";"))
+            right = list(map(str.strip, right.split(";")))
             self.map[left] = right
     def process(self, keyevent):
         logging.debug("Received %s" % keyevent)
@@ -210,7 +210,7 @@ def test():
     logging.getLogger().setLevel(logging.INFO)
     ts = "KEY_LEFTCTRL-down KEY_P KEY_LEFTCTRL-up"
     logging.info("%s %r" % (ts, make_keyevents(ts)))
-    from StringIO import StringIO
+    from io import StringIO
     s = StringIO("""
 Ctrl-KEY_P-down = wait
 Ctrl-KEY_P-down KEY_P-up = echo send Shift-KEY_P; send Shift-KEY_P; clear

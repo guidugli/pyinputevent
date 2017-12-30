@@ -2,7 +2,7 @@ import struct
 import os
 import time
 import fcntl
-import scancodes
+from . import scancodes
 
 #define UINPUT_MAX_NAME_SIZE    80
 #struct uinput_user_dev {
@@ -117,7 +117,7 @@ class UInputDevice(object):
                     fcntl.ioctl(fd, UI_SET_KEYBIT, v)
             else:
                 KEY_MAX = 767 # 0x2ff
-                for k,v in scancodes.__dict__.items():
+                for k,v in list(scancodes.__dict__.items()):
                     # add every recognised key
                     if v < KEY_MAX and k.startswith('KEY_'):
                         fcntl.ioctl(fd, UI_SET_KEYBIT, v)
@@ -146,12 +146,12 @@ class UInputDevice(object):
         elif hasattr(event, 'pack'):
             os.write(self._fd, event.pack())
         else:
-            print >>sys.stderr, "Don't know what to do to send %r" % (event,)
+            print("Don't know what to do to send %r" % (event,), file=sys.stderr)
 
 if __name__ == '__main__':
     udev = UInputDevice("Test", 0x0, 0x1, 1)
     udev.create()
-    from pyinputevent import InputEvent
+    from .pyinputevent import InputEvent
     import sys
     udev.send_event(InputEvent.new(0,0,0))
     i = 100

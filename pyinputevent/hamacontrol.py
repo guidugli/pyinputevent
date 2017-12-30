@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
-from uinput import UInputDevice
-from pyinputevent import InputEvent, SimpleDevice
-from keytrans import *
+from .uinput import UInputDevice
+from .pyinputevent import InputEvent, SimpleDevice
+from .keytrans import *
 import select
-import scancodes as S
+from . import scancodes as S
 import logging
 import getopt
 import sys
@@ -94,7 +94,7 @@ class ForwardDevice(SimpleDevice):
             #print "-------------- sync --------------"
             return
         else:
-            print "Unhandled event: %r" % event
+            print("Unhandled event: %r" % event)
             #self.udev.send_event(event)
 
 
@@ -106,7 +106,7 @@ def main(devs):
     for devpath in devs:
         dev = ForwardDevice(udev, devpath, devpath)
         poll.register(dev, select.POLLIN | select.POLLPRI)
-	fcntl.ioctl(dev.fileno(), 0x40044590, 1)
+        fcntl.ioctl(dev.fileno(), 0x40044590, 1)
         fds[dev.fileno()] = dev
     while True:
         for x,e in poll.poll():

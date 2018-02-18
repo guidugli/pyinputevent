@@ -11,7 +11,6 @@ from .pyinputevent import InputEvent
 from . import scancodes
 import logging
 import time
-import compiler
 S = scancodes
 
 #
